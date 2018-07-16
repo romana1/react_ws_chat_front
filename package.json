@@ -1,6 +1,7 @@
 {
-  "name": "react-example-my2",
+  "name": "render_on_scroll",
   "version": "0.1.0",
+  "author": "Roman Arefev",
   "private": true,
   "dependencies": {
     "react": "^16.4.1",
