@@ -1,13 +1,16 @@
 {
-  "name": "render_on_scroll",
+  "name": "react_test_chat_front",
   "version": "0.1.0",
   "author": "Roman Arefev",
   "private": true,
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "moment": "^2.24.0",
+    "prop-types": "^15.5.10",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "prop-types": "^15.5.10",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
     "enzyme": "^3.3.0",

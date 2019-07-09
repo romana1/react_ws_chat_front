@@ -1,10 +1,10 @@
-# Widget in React 16.4
+# React realtime chat, front-end part, based on create-react-app
 
-Infinite Scroll or infinite List component. It renders list of items that are visible to improve a performance/
+## Features:
 
-## Technologies:
+* real time broadcast for all connected clients
+* persistance with Postgresql
+* view with pool of connected users
+* restriction for chat connect without name or with the same name
+* optimization with in-memory cache of read/write Postgres operations for high-load
 
-* Controlled components
-* Tests with jest and enzyme
-
-![img](./renders_only_on_screen.gif) 
