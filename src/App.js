@@ -27,15 +27,26 @@ class App extends React.Component {
 
   componentDidMount() {
       socket.on('connect',  () => {
-        console.log("bind into socket", socket.connected)
         socket.on('users', this.usersList.bind(this));
         socket.on('messages', this.messagesReceive.bind(this));
-      })
+        socket.on('disconnect', () => {
+          this.connectionError({msg: "socket disconnected, try reconnect"});
+          
+          // this could solve bug with socket.io-client
+          // https://github.com/socketio/socket.io-client/issues/1175
+
+          // socket.emit('message', JSON.stringify([]));
+        });
+      });
   }
 
   connectionError(err) {
-    this.setState({ error: err.err });
-    console.log("connectionError", err.msg ? err.msg : err )
+    this.setState({ 
+      error: err.msg,
+      login: null,
+      users: []
+    });
+    console.log( err.msg ? err.msg : "connectionError" )
   }
   
   usersList(users) {
@@ -53,10 +64,9 @@ class App extends React.Component {
 
   handleSubmitLogin(e) {
     e.preventDefault();
-    // let users = [...this.state.users, this.state.loginInput];
     this.setState({ login: this.state.loginInput });
     socket.emit('user', { login: this.state.loginInput });
-    return fetch(`http://localhost:8080/messages?login=${this.state.loginInput}`)
+    return fetch(`http://localhost:8080/messages`)
       .then(response => response.json())
       .then(data => {
         console.log(data);
@@ -65,14 +75,13 @@ class App extends React.Component {
         else 
           this.setState({messages: []})
       })
-      .catch(function (err) {
-        console.log('Fetch Error', err);
+      .catch((err) => {
+        this.connectionError({msg: "Fetch msgs error"});
       });
   }
 
   render() {
     let login = this.state.login;
-    let err = this.state.err;
     const autoFocus = login ? false : true;
     return (
       <div className="chat-box">
@@ -92,7 +101,6 @@ class App extends React.Component {
         <MessageInput
           socket={socket} login={login}>
         </MessageInput>
-        {!!err && <div className="alert alert-dange">{JSON.stringify(err)}</div>}
       </div>
     );
   }

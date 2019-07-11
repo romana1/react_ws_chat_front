@@ -12,7 +12,6 @@ export default class MessageInput extends React.Component {
 
     keyHandler(e) {
         const socket = this.props.socket;
-        console.log('login', this.props.login)
         if (e.keyCode === 13) {
             e.preventDefault();
             let msg = this.state.message.trim();

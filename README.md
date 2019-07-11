@@ -8,3 +8,5 @@
 * restriction for chat connect without name or with the same name
 * optimization with in-memory cache of read/write Postgres operations for high-load
 
+## There are tests of Components with Enzyme and Sinon libs
+

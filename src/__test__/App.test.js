@@ -2,10 +2,11 @@ import 'jsdom-global/register';
 
 import React from 'react';
 import { shallow, mount } from 'enzyme';
+import sinon from 'sinon';
 
 import App from '../App';
-import ListView from '../Components/ListView.js'
-import ExampleItem from '../Components/ExampleItem.js'
+import ChatMessage from '../Components/ChatMessage'
+import MessageInput from '../Components/MessageInput'
 
 describe('<App>', () => {
 
@@ -13,42 +14,31 @@ describe('<App>', () => {
         shallow(<App />);
        });
     
-    it('renders 121 of 1000 exampleItem on 1200 height screen', () => {
+    it('renders ChatMessage with message', () => {
 
-        const wrapper = mount(<ListView numRows={1000} rowHeight={10} />);
-        wrapper.setState({availableHeight : 1200})
-
-        expect(wrapper.find(ExampleItem).length).toBe(121);
+        const wrapper = shallow(<ChatMessage message={{
+            author: "Iam",
+            content: "my",
+            created_at: "1980-01-01 22:01:14"
+        }} />);
+       
+        expect(wrapper.find('.message-time').text()).toBe('[1980-01-01 22:01:14]');
+        expect(wrapper.find('.message-author').text()).toBe('<Iam>');
+        expect(wrapper.find('.message-content').text()).toBe('my');
   
     });
 
-    it('renders at first, 121 on 1200 height screen, then 161 of 1000 exampleItem on 1600 height screen', () => {
-
-        const wrapper = mount(<ListView numRows={1000} rowHeight={10} />);
-        wrapper.setState({availableHeight : 1200});
-        wrapper.setState({availableHeight : 1600});
-
-        expect(wrapper.find(ExampleItem).length).toBe(161);
-      
-    });
-
-    it('renders following elements on scroll ', () => {
-
-        const wrapper = mount(<ListView numRows={1000} rowHeight={10} />);
-        wrapper.setState({availableHeight : 1200});
-
-        const rootDomNode = wrapper.getDOMNode();
-        rootDomNode.scrollTop = 1300;
-        wrapper.simulate('scroll', {target : rootDomNode});
-        wrapper.update();
-
-        expect(wrapper.find(ExampleItem).at(0).contains(<div className="example">
-        This is
-        130
-      </div>)).toBe(true);
-
-      
-    });
+    it('simulates keyUp events into MessageInput', () => {
+        const keyHandler = sinon.spy(MessageInput.prototype, 'keyHandler');
+        const socket = sinon.spy();
+        const login = "123";
+        const wrapper = mount(
+          <MessageInput socket={socket} login={login} />
+        );
+        wrapper.setState({ message: 'Iam' })
+        wrapper.find('input').simulate('keyUp');
+        expect(keyHandler.calledOnce).toBe(true);
+      });
 
 })
 
